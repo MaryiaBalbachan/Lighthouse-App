@@ -45,7 +45,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_margin="8dp"
-                    android:autofillHints=""
                     android:hint="@string/hint_lighthouseTitle"
                     android:inputType="text"
                     android:maxLength="25"
