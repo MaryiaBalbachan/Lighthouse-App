@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import org.wit.lighthouse.databinding.ActivityLighthouseBinding
+import org.wit.lighthouse.main.MainApp
 
 import org.wit.lighthouse.models.LighthouseModel
 import timber.log.Timber
@@ -13,7 +14,9 @@ class LighthouseActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLighthouseBinding
     var lighthouse = LighthouseModel()
-    val lighthouses = ArrayList<LighthouseModel>()
+    //val lighthouses = ArrayList<LighthouseModel>()
+    //var app : MainApp? = null
+    lateinit var app: MainApp
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +24,7 @@ class LighthouseActivity : AppCompatActivity() {
         binding = ActivityLighthouseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        app = application as MainApp
       //  Timber.plant(Timber.DebugTree())
 
         i("Lighthouse Activity started...")
@@ -30,10 +34,10 @@ class LighthouseActivity : AppCompatActivity() {
             lighthouse.description = binding.description.text.toString()
             if (lighthouse.title.isNotEmpty()) {
 
-                lighthouses.add(lighthouse.copy())
+                app.lighthouses.add(lighthouse.copy())
                 i("add Button Pressed: ${lighthouse}")
-                for (i in lighthouses.indices) {
-                    i("Lighthouse[$i]:${this.lighthouses[i]}")
+                for (i in app.lighthouses.indices) {
+                    i("Lighthouse[$i]:${this.app.lighthouses[i]}")
                 }
             }
             else {
