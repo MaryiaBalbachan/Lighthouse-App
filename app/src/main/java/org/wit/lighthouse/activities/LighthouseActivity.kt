@@ -21,7 +21,7 @@ class LighthouseActivity : AppCompatActivity() {
         binding = ActivityLighthouseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Timber.plant(Timber.DebugTree())
+      //  Timber.plant(Timber.DebugTree())
 
         i("Lighthouse Activity started...")
 
