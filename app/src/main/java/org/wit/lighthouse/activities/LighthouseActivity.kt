@@ -22,6 +22,7 @@ class LighthouseActivity : AppCompatActivity() {
     private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
     private lateinit var binding: ActivityLighthouseBinding
+    var location = Location(52.245696, -7.139102, 15f)
 
     var lighthouse = LighthouseModel()
 
@@ -81,12 +82,11 @@ class LighthouseActivity : AppCompatActivity() {
         binding.lighthouseLocation.setOnClickListener {
             i ("Set Location Pressed")
         }
-        binding.lighthouseLocation.setOnClickListener {
+       /* binding.lighthouseLocation.setOnClickListener {
             val launcherIntent = Intent(this, MapActivity::class.java)
             mapIntentLauncher.launch(launcherIntent)
-        }
+        }*/
         binding.lighthouseLocation.setOnClickListener {
-            val location = Location(52.245696, -7.139102, 15f)
             val launcherIntent = Intent(this, MapActivity::class.java)
                 .putExtra("location", location)
             mapIntentLauncher.launch(launcherIntent)
@@ -128,6 +128,17 @@ class LighthouseActivity : AppCompatActivity() {
     private fun registerMapCallback() {
         mapIntentLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-            { i("Map Loaded") }
+            { result ->
+                when (result.resultCode) {
+                    RESULT_OK -> {
+                        if (result.data != null) {
+                            i("Got Location ${result.data.toString()}")
+                            location = result.data!!.extras?.getParcelable("location")!!
+                            i("Location == $location")
+                        } // end of if
+                    }
+                    RESULT_CANCELED -> { } else -> { }
+                }
+            }
     }
-}
+    }
