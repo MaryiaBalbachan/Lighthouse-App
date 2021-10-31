@@ -18,12 +18,16 @@ import org.wit.lighthouse.models.LighthouseModel
 import timber.log.Timber.i
 
 class LighthouseActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityLighthouseBinding
-    var lighthouse = LighthouseModel()
+    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
-    //val lighthouses = ArrayList<lighthouseModel>()
+    private lateinit var binding: ActivityLighthouseBinding
+
+    var lighthouse = LighthouseModel()
+
     lateinit var app: MainApp
+
+
+    //val lighthouses = ArrayList<lighthouseModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,8 +77,18 @@ class LighthouseActivity : AppCompatActivity() {
         binding.chooseImage.setOnClickListener {
             showImagePicker(imageIntentLauncher)
         }
+        binding.lighthouseLocation.setOnClickListener {
+            i ("Set Location Pressed")
+        }
+        binding.lighthouseLocation.setOnClickListener {
+            val launcherIntent = Intent(this, MapActivity::class.java)
+            mapIntentLauncher.launch(launcherIntent)
+        }
+        registerMapCallback()
         registerImagePickerCallback()
     }
+
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_lighthouse, menu)
         return super.onCreateOptionsMenu(menu)
@@ -103,5 +117,10 @@ class LighthouseActivity : AppCompatActivity() {
                     RESULT_CANCELED -> { } else -> { }
                 }
             }
+    }
+    private fun registerMapCallback() {
+        mapIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { i("Map Loaded") }
     }
 }
