@@ -15,6 +15,7 @@ import org.wit.lighthouse.databinding.ActivityLighthouseBinding
 import org.wit.lighthouse.helpers.showImagePicker
 import org.wit.lighthouse.main.MainApp
 import org.wit.lighthouse.models.LighthouseModel
+import org.wit.lighthouse.models.Location
 import timber.log.Timber.i
 
 class LighthouseActivity : AppCompatActivity() {
@@ -82,6 +83,12 @@ class LighthouseActivity : AppCompatActivity() {
         }
         binding.lighthouseLocation.setOnClickListener {
             val launcherIntent = Intent(this, MapActivity::class.java)
+            mapIntentLauncher.launch(launcherIntent)
+        }
+        binding.lighthouseLocation.setOnClickListener {
+            val location = Location(52.245696, -7.139102, 15f)
+            val launcherIntent = Intent(this, MapActivity::class.java)
+                .putExtra("location", location)
             mapIntentLauncher.launch(launcherIntent)
         }
         registerMapCallback()
