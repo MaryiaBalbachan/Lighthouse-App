@@ -11,12 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.wit.lighthouse.R
 import org.wit.lighthouse.adapters.LighthouseAdapter
+import org.wit.lighthouse.adapters.LighthouseListener
 import org.wit.lighthouse.databinding.ActivityLighthouseListBinding
 import org.wit.lighthouse.databinding.CardLighthouseBinding
 import org.wit.lighthouse.main.MainApp
 import org.wit.lighthouse.models.LighthouseModel
 
-class LighthouseListActivity : AppCompatActivity() {
+class LighthouseListActivity : AppCompatActivity(), LighthouseListener {
 
     lateinit var app: MainApp
     private lateinit var binding: ActivityLighthouseListBinding
@@ -32,7 +33,7 @@ class LighthouseListActivity : AppCompatActivity() {
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
-        binding.recyclerView.adapter = LighthouseAdapter(app.lighthouses)
+        binding.recyclerView.adapter = LighthouseAdapter(app.lighthouses.findAll(),this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -48,6 +49,12 @@ class LighthouseListActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onLighthouseClick(lighthouse: LighthouseModel) {
+        val launcherIntent = Intent(this, LighthouseActivity::class.java)
+        launcherIntent.putExtra("lighthouse_edit", lighthouse)
+        startActivityForResult(launcherIntent,0)
     }
 }
 

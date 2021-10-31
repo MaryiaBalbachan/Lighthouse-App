@@ -6,7 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import org.wit.lighthouse.databinding.CardLighthouseBinding
 import org.wit.lighthouse.models.LighthouseModel
 
-class LighthouseAdapter constructor(private var lighthouses: List<LighthouseModel>) :
+interface LighthouseListener {
+    fun onLighthouseClick(lighthouse: LighthouseModel)
+}
+
+class LighthouseAdapter constructor(private var lighthouses: List<LighthouseModel>,
+                                    private val listener: LighthouseListener) :
     RecyclerView.Adapter<LighthouseAdapter.MainHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
@@ -17,17 +22,20 @@ class LighthouseAdapter constructor(private var lighthouses: List<LighthouseMode
 
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
         val lighthouse = lighthouses[holder.adapterPosition]
-        holder.bind(lighthouse)
+        holder.bind(lighthouse, listener)
     }
 
     override fun getItemCount(): Int = lighthouses.size
 
-    class MainHolder(private val binding : CardLighthouseBinding) :
+    class MainHolder(private val binding: CardLighthouseBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(lighthouse: LighthouseModel) {
+        fun bind(lighthouse: LighthouseModel, listener: LighthouseListener) {
             binding.lighthouseTitle.text = lighthouse.title
             binding.description.text = lighthouse.description
+            binding.root.setOnClickListener {
+                listener.onLighthouseClick(lighthouse)
+            }
         }
     }
 }

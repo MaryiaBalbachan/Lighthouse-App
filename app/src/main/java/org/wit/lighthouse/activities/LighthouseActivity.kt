@@ -29,23 +29,24 @@ class LighthouseActivity : AppCompatActivity() {
         app = application as MainApp
 
         i("Lighthouse Activity started...")
+        if (intent.hasExtra("lighthouse_edit")) {
+            lighthouse = intent.extras?.getParcelable("lighthouse_edit")!!
+            binding.lighthouseTitle.setText(lighthouse.title)
+            binding.description.setText(lighthouse.description)
+        }
 
         binding.btnAdd.setOnClickListener() {
             lighthouse.title = binding.lighthouseTitle.text.toString()
             lighthouse.description = binding.description.text.toString()
             if (lighthouse.title.isNotEmpty()) {
 
-                app.lighthouses.add(lighthouse.copy())
-                i("add Button Pressed: ${lighthouse}")
-                for (i in app.lighthouses.indices) {
-                    i("lighthouse[$i]:${this.app.lighthouses[i]}")
-                }
+                app.lighthouses.create(lighthouse.copy())
                 setResult(RESULT_OK)
                 finish()
             }
             else {
                 Snackbar
-                    .make(it,"Please Enter a title", Snackbar.LENGTH_LONG)
+                    .make(it,"Please Enter Lighthouse Name", Snackbar.LENGTH_LONG)
                     .show()
             }
         }
