@@ -21,6 +21,8 @@ class LighthouseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        var edit = false
+
         binding = ActivityLighthouseBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.toolbarAdd.title = title
@@ -28,28 +30,31 @@ class LighthouseActivity : AppCompatActivity() {
 
         app = application as MainApp
 
-        i("Lighthouse Activity started...")
         if (intent.hasExtra("lighthouse_edit")) {
+            edit = true
             lighthouse = intent.extras?.getParcelable("lighthouse_edit")!!
             binding.lighthouseTitle.setText(lighthouse.title)
             binding.description.setText(lighthouse.description)
+            binding.btnAdd.setText(R.string.save_lighthouse)
         }
 
         binding.btnAdd.setOnClickListener() {
             lighthouse.title = binding.lighthouseTitle.text.toString()
             lighthouse.description = binding.description.text.toString()
-            if (lighthouse.title.isNotEmpty()) {
-
-                app.lighthouses.create(lighthouse.copy())
-                setResult(RESULT_OK)
-                finish()
-            }
-            else {
-                Snackbar
-                    .make(it,"Please Enter Lighthouse Name", Snackbar.LENGTH_LONG)
+            if (lighthouse.title.isEmpty()) {
+                Snackbar.make(it,R.string.enter_lighthouse_title, Snackbar.LENGTH_LONG)
                     .show()
+            } else {
+                if (edit) {
+                    app.lighthouses.update(lighthouse.copy())
+                } else {
+                    app.lighthouses.create(lighthouse.copy())
+                }
             }
+            setResult(RESULT_OK)
+            finish()
         }
+
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_lighthouse, menu)
