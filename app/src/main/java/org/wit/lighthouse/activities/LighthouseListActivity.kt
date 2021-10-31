@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.wit.lighthouse.R
+import org.wit.lighthouse.adapters.LighthouseAdapter
 import org.wit.lighthouse.databinding.ActivityLighthouseListBinding
 import org.wit.lighthouse.databinding.CardLighthouseBinding
 import org.wit.lighthouse.main.MainApp
@@ -31,7 +32,7 @@ class LighthouseListActivity : AppCompatActivity() {
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
-        binding.recyclerView.adapter = lighthouseAdapter(app.lighthouses)
+        binding.recyclerView.adapter = LighthouseAdapter(app.lighthouses)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -50,30 +51,5 @@ class LighthouseListActivity : AppCompatActivity() {
     }
 }
 
-class lighthouseAdapter constructor(private var lighthouses: List<LighthouseModel>) :
-    RecyclerView.Adapter<lighthouseAdapter.MainHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
-        val binding = CardLighthouseBinding
-            .inflate(LayoutInflater.from(parent.context), parent, false)
-
-        return MainHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: MainHolder, position: Int) {
-        val lighthouse = lighthouses[holder.adapterPosition]
-        holder.bind(lighthouse)
-    }
-
-    override fun getItemCount(): Int = lighthouses.size
-
-    class MainHolder(private val binding : CardLighthouseBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(lighthouse: LighthouseModel) {
-            binding.lighthouseTitle.text = lighthouse.title
-            binding.description.text = lighthouse.description
-        }
-    }
-}
 
