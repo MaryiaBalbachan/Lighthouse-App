@@ -25,6 +25,9 @@ class LighthouseMemStore : LighthouseStore {
             foundlighthouse.title = lighthouse.title
             foundlighthouse.description = lighthouse.description
             foundlighthouse.image = lighthouse.image
+            foundlighthouse.lat = lighthouse.lat
+            foundlighthouse.lng = lighthouse.lng
+            foundlighthouse.zoom = lighthouse.zoom
             logAll()
         }
     }

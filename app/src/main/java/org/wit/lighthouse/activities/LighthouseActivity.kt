@@ -22,7 +22,7 @@ class LighthouseActivity : AppCompatActivity() {
     private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
     private lateinit var binding: ActivityLighthouseBinding
-    var location = Location(52.245696, -7.139102, 15f)
+    //var location = Location(52.245696, -7.139102, 15f)
 
     var lighthouse = LighthouseModel()
 
@@ -87,6 +87,12 @@ class LighthouseActivity : AppCompatActivity() {
             mapIntentLauncher.launch(launcherIntent)
         }*/
         binding.lighthouseLocation.setOnClickListener {
+            val location = Location(52.245696, -7.139102, 15f)
+            if (lighthouse.zoom != 0f) {
+                location.lat =  lighthouse.lat
+                location.lng = lighthouse.lng
+                location.zoom = lighthouse.zoom
+            }
             val launcherIntent = Intent(this, MapActivity::class.java)
                 .putExtra("location", location)
             mapIntentLauncher.launch(launcherIntent)
@@ -133,12 +139,17 @@ class LighthouseActivity : AppCompatActivity() {
                     RESULT_OK -> {
                         if (result.data != null) {
                             i("Got Location ${result.data.toString()}")
-                            location = result.data!!.extras?.getParcelable("location")!!
+                            val location = result.data!!.extras?.getParcelable<Location>("location")!!
                             i("Location == $location")
+                            lighthouse.lat = location.lat
+                            lighthouse.lng = location.lng
+                            lighthouse.zoom = location.zoom
                         } // end of if
                     }
                     RESULT_CANCELED -> { } else -> { }
                 }
             }
     }
+
     }
+
