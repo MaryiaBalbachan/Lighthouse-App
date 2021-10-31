@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">Lighthouse App</string>
+    <string name="app_name">Lighthouse</string>
     <string name="button_addLighthouse">Add a Lighthouse</string>
     <string name="hint_lighthouseTitle">Lighthouse Name</string>
-    <string name="hint_lighthouseDescription">Description </string>
+    <string name="hint_lighthouseDescription">Details </string>
+    <string name="menu_addLighthouse">Add</string>
 </resources>

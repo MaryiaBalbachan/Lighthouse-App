@@ -1,8 +1,11 @@
 package org.wit.lighthouse.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,17 +23,35 @@ class LighthouseListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLighthouseListBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_lighthouse_list)
+        setContentView(binding.root)
+        binding.toolbar.title = title
+        setSupportActionBar(binding.toolbar)
 
         app = application as MainApp
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
-        binding.recyclerView.adapter = LighthouseAdapter(app.lighthouses)
+        binding.recyclerView.adapter = lighthouseAdapter(app.lighthouses)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.item_add -> {
+                val launcherIntent = Intent(this, LighthouseActivity::class.java)
+                startActivityForResult(launcherIntent,0)
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
-class LighthouseAdapter constructor(private var lighthouses: List<LighthouseModel>) :
-    RecyclerView.Adapter<LighthouseAdapter.MainHolder>() {
+
+class lighthouseAdapter constructor(private var lighthouses: List<LighthouseModel>) :
+    RecyclerView.Adapter<lighthouseAdapter.MainHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
         val binding = CardLighthouseBinding
@@ -49,9 +70,10 @@ class LighthouseAdapter constructor(private var lighthouses: List<LighthouseMode
     class MainHolder(private val binding : CardLighthouseBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(placemark: LighthouseModel) {
-            binding.lighthouseTitle.text = placemark.title
-            binding.description.text = placemark.description
+        fun bind(lighthouse: LighthouseModel) {
+            binding.lighthouseTitle.text = lighthouse.title
+            binding.description.text = lighthouse.description
         }
     }
 }
+

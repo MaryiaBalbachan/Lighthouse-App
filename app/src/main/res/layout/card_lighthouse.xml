@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:textSize="30sp"
-            tools:text="A Name" />
+            tools:text="A Title" />
 
         <TextView
             android:id="@+id/description"
