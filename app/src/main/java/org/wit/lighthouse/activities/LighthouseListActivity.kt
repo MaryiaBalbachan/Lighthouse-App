@@ -36,8 +36,9 @@ class LighthouseListActivity : AppCompatActivity(), LighthouseListener {
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
-        binding.recyclerView.adapter = LighthouseAdapter(app.lighthouses.findAll(),this)
 
+
+        loadLighthouses()
         registerRefreshCallback()
     }
 
@@ -70,7 +71,16 @@ class LighthouseListActivity : AppCompatActivity(), LighthouseListener {
     private fun registerRefreshCallback() {
         refreshIntentLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-            { binding.recyclerView.adapter?.notifyDataSetChanged() }
+            { loadLighthouses() }
+    }
+
+    private fun loadLighthouses() {
+        showLighthouses(app.lighthouses.findAll())
+    }
+
+    fun showLighthouses (lighthouses: List<LighthouseModel>) {
+        binding.recyclerView.adapter = LighthouseAdapter(lighthouses, this)
+        binding.recyclerView.adapter?.notifyDataSetChanged()
     }
 }
 
