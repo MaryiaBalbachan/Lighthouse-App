@@ -42,7 +42,17 @@ class LighthouseJSONStore(private val context: Context) : LighthouseStore {
 
 
     override fun update(lighthouse: LighthouseModel) {
-        // todo
+        val lighthousesList = findAll() as ArrayList<LighthouseModel>
+        var foundlighthouse: LighthouseModel? = lighthousesList.find { p -> p.id == lighthouse.id }
+        if (foundlighthouse != null) {
+            foundlighthouse.title = lighthouse.title
+            foundlighthouse.description = lighthouse.description
+            foundlighthouse.image = lighthouse.image
+            foundlighthouse.lat = lighthouse.lat
+            foundlighthouse.lng = lighthouse.lng
+            foundlighthouse.zoom = lighthouse.zoom
+        }
+        serialize()
     }
 
     private fun serialize() {
