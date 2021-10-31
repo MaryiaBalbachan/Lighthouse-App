@@ -8,5 +8,6 @@
     <string name="enter_lighthouse_title"> Please enter Lighthouse Name </string>
     <string name="save_lighthouse"> Save Your Lighthouse </string>
     <string name="button_addImage"> Add Image </string>
-    <string name="select_lighthouse_image">Select lighthouse image</string>
+    <string name="select_lighthouse_image">Select Lighthouse image</string>
+    <string name="change_lighthouse_image">Change Lighthouse image</string>
 </resources>

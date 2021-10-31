@@ -24,6 +24,7 @@ class LighthouseMemStore : LighthouseStore {
         if (foundlighthouse != null) {
             foundlighthouse.title = lighthouse.title
             foundlighthouse.description = lighthouse.description
+            foundlighthouse.image = lighthouse.image
             logAll()
         }
     }

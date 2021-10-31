@@ -1,6 +1,7 @@
 package org.wit.lighthouse.activities
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -45,6 +46,9 @@ class LighthouseActivity : AppCompatActivity() {
             Picasso.get()
                 .load(lighthouse.image)
                 .into(binding.lighthouseImage)
+            if (lighthouse.image != Uri.EMPTY) {
+                binding.chooseImage.setText(R.string.change_lighthouse_image)
+            }
         }
 
         binding.btnAdd.setOnClickListener() {
@@ -93,6 +97,7 @@ class LighthouseActivity : AppCompatActivity() {
                             Picasso.get()
                                 .load(lighthouse.image)
                                 .into(binding.lighthouseImage)
+                            binding.chooseImage.setText(R.string.change_lighthouse_image)
                         } // end of if
                     }
                     RESULT_CANCELED -> { } else -> { }
