@@ -4,4 +4,5 @@
     <string name="hint_lighthouseTitle">Lighthouse Name</string>
     <string name="hint_lighthouseDescription">Details </string>
     <string name="menu_addLighthouse">Add</string>
+    <string name="menu_cancelLighthouse">Cancel</string>
 </resources>

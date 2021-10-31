@@ -2,7 +2,10 @@ package org.wit.lighthouse.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import com.google.android.material.snackbar.Snackbar
+import org.wit.lighthouse.R
 import org.wit.lighthouse.databinding.ActivityLighthouseBinding
 import org.wit.lighthouse.main.MainApp
 import org.wit.lighthouse.models.LighthouseModel
@@ -20,6 +23,8 @@ class LighthouseActivity : AppCompatActivity() {
 
         binding = ActivityLighthouseBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.toolbarAdd.title = title
+        setSupportActionBar(binding.toolbarAdd)
 
         app = application as MainApp
 
@@ -44,5 +49,15 @@ class LighthouseActivity : AppCompatActivity() {
                     .show()
             }
         }
+    }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_lighthouse, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.item_cancel -> { finish() }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
