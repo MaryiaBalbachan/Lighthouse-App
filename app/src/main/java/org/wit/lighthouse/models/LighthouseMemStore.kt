@@ -32,6 +32,10 @@ class LighthouseMemStore : LighthouseStore {
         }
     }
 
+    override fun delete(lighthouse: LighthouseModel){
+        lighthouses.remove(lighthouse)
+    }
+
     fun logAll() {
         lighthouses.forEach{ i("${it}") }
     }

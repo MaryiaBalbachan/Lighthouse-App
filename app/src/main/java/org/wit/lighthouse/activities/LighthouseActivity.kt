@@ -27,14 +27,14 @@ class LighthouseActivity : AppCompatActivity() {
     var lighthouse = LighthouseModel()
 
     lateinit var app: MainApp
-
+    var edit = false
 
     //val lighthouses = ArrayList<lighthouseModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var edit = false
+        edit = true
 
         binding = ActivityLighthouseBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -87,7 +87,7 @@ class LighthouseActivity : AppCompatActivity() {
             mapIntentLauncher.launch(launcherIntent)
         }*/
         binding.lighthouseLocation.setOnClickListener {
-            val location = Location(52.245696, -7.139102, 15f)
+            val location = Location(52.1237, -6.9294, 15f)
             if (lighthouse.zoom != 0f) {
                 location.lat =  lighthouse.lat
                 location.lng = lighthouse.lng
@@ -104,11 +104,17 @@ class LighthouseActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_lighthouse, menu)
+        if (edit && menu != null) menu.getItem(0).setVisible(true)
         return super.onCreateOptionsMenu(menu)
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.item_cancel -> { finish() }
+            R.id.item_delete -> {
+                app.lighthouses.delete(lighthouse)
+                finish()
+            }
+            R.id.item_cancel -> {
+                finish() }
         }
         return super.onOptionsItemSelected(item)
     }

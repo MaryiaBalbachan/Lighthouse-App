@@ -54,6 +54,10 @@ class LighthouseJSONStore(private val context: Context) : LighthouseStore {
         }
         serialize()
     }
+    override fun delete(lighthouse: LighthouseModel){
+        lighthouses.remove(lighthouse)
+        serialize()
+    }
 
     private fun serialize() {
         val jsonString = gsonBuilder.toJson(lighthouses, listType)
