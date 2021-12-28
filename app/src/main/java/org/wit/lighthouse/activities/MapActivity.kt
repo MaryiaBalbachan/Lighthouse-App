@@ -15,7 +15,8 @@ import org.wit.lighthouse.databinding.ActivityMapBinding
 import org.wit.lighthouse.models.Location
 
 
-class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerDragListener,
+class MapActivity : AppCompatActivity(), OnMapReadyCallback,
+    GoogleMap.OnMarkerDragListener,
     GoogleMap.OnMarkerClickListener{
 
     private lateinit var map: GoogleMap

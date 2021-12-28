@@ -24,6 +24,7 @@ class LighthouseMapsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        app = application as MainApp
 
         binding = ActivityLighthouseMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -36,11 +37,16 @@ class LighthouseMapsActivity : AppCompatActivity() {
             configureMap()
         }
 
-
     }
 
     fun configureMap(){
         map.uiSettings.isZoomControlsEnabled = true
+        app.lighthouses.findAll().forEach {
+            val loc = LatLng(it.lat, it.lng)
+            val options = MarkerOptions().title(it.title).position(loc)
+            map.addMarker(options).tag = it.id
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, it.zoom))
+        }
     }
     override fun onDestroy() {
         super.onDestroy()

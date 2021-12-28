@@ -27,14 +27,14 @@ class LighthouseActivity : AppCompatActivity() {
     var lighthouse = LighthouseModel()
 
     lateinit var app: MainApp
-    var edit = false
+
 
     //val lighthouses = ArrayList<lighthouseModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        edit = true
+       var edit = false
 
         binding = ActivityLighthouseBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -70,22 +70,16 @@ class LighthouseActivity : AppCompatActivity() {
                     app.lighthouses.create(lighthouse.copy())
                 }
             }
+            i("add Button Pressed: $lighthouse")
             setResult(RESULT_OK)
             finish()
         }
-        binding.chooseImage.setOnClickListener {
-            i("Select image")
-        }
+
         binding.chooseImage.setOnClickListener {
             showImagePicker(imageIntentLauncher)
         }
-        binding.lighthouseLocation.setOnClickListener {
-            i ("Set Location Pressed")
-        }
-       /* binding.lighthouseLocation.setOnClickListener {
-            val launcherIntent = Intent(this, MapActivity::class.java)
-            mapIntentLauncher.launch(launcherIntent)
-        }*/
+
+
         binding.lighthouseLocation.setOnClickListener {
             val location = Location(52.1237, -6.9294, 15f)
             if (lighthouse.zoom != 0f) {
@@ -104,7 +98,7 @@ class LighthouseActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_lighthouse, menu)
-        if (edit && menu != null) menu.getItem(0).setVisible(true)
+        //if (edit && menu != null) menu.getItem(0).setVisible(true)
         return super.onCreateOptionsMenu(menu)
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
