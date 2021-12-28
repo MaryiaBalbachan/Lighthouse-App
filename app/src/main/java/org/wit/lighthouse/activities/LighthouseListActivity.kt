@@ -24,6 +24,7 @@ class LighthouseListActivity : AppCompatActivity(), LighthouseListener {
     lateinit var app: MainApp
     private lateinit var binding: ActivityLighthouseListBinding
     private lateinit var refreshIntentLauncher : ActivityResultLauncher<Intent>
+    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +41,7 @@ class LighthouseListActivity : AppCompatActivity(), LighthouseListener {
 
         loadLighthouses()
         registerRefreshCallback()
+        registerMapCallback()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -53,6 +55,10 @@ class LighthouseListActivity : AppCompatActivity(), LighthouseListener {
                 val launcherIntent = Intent(this, LighthouseActivity::class.java)
                 refreshIntentLauncher.launch(launcherIntent)
             }
+            R.id.item_map -> {
+                val launcherIntent = Intent(this, LighthouseMapsActivity::class.java)
+                refreshIntentLauncher.launch(launcherIntent)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -60,7 +66,7 @@ class LighthouseListActivity : AppCompatActivity(), LighthouseListener {
     override fun onLighthouseClick(lighthouse: LighthouseModel) {
         val launcherIntent = Intent(this, LighthouseActivity::class.java)
         launcherIntent.putExtra("lighthouse_edit", lighthouse)
-        refreshIntentLauncher.launch(launcherIntent)
+        mapIntentLauncher.launch(launcherIntent)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -72,6 +78,11 @@ class LighthouseListActivity : AppCompatActivity(), LighthouseListener {
         refreshIntentLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult())
             { loadLighthouses() }
+    }
+    private fun registerMapCallback() {
+        mapIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { }
     }
 
     private fun loadLighthouses() {
