@@ -18,6 +18,8 @@ class LighthouseMapsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLighthouseMapsBinding
     private lateinit var contentBinding: ContentLighthouseMapsBinding
     lateinit var map: GoogleMap
+    lateinit var app: MainApp
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,8 +31,16 @@ class LighthouseMapsActivity : AppCompatActivity() {
 
         contentBinding = ContentLighthouseMapsBinding.bind(binding.root)
         contentBinding.mapView.onCreate(savedInstanceState)
+        contentBinding.mapView.getMapAsync {
+            map = it
+            configureMap()
+        }
 
 
+    }
+
+    fun configureMap(){
+        map.uiSettings.isZoomControlsEnabled = true
     }
     override fun onDestroy() {
         super.onDestroy()
