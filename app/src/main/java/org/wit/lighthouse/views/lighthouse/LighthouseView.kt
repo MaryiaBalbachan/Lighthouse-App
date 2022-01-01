@@ -1,4 +1,4 @@
-package org.wit.lighthouse.activities
+package org.wit.lighthouse.views.lighthouse
 
 import android.content.Intent
 import android.net.Uri
@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import org.wit.lighthouse.R
+import org.wit.lighthouse.activities.MapActivity
 import org.wit.lighthouse.databinding.ActivityLighthouseBinding
 import org.wit.lighthouse.helpers.showImagePicker
 import org.wit.lighthouse.main.MainApp

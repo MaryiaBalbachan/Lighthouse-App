@@ -1,23 +1,21 @@
-package org.wit.lighthouse.activities
+package org.wit.lighthouse.views.lighthouselist
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import org.wit.lighthouse.R
+import org.wit.lighthouse.activities.LighthouseMapsActivity
 import org.wit.lighthouse.adapters.LighthouseAdapter
 import org.wit.lighthouse.adapters.LighthouseListener
 import org.wit.lighthouse.databinding.ActivityLighthouseListBinding
-import org.wit.lighthouse.databinding.CardLighthouseBinding
 import org.wit.lighthouse.main.MainApp
 import org.wit.lighthouse.models.LighthouseModel
+import org.wit.lighthouse.views.lighthouse.LighthouseView
 
 class LighthouseListActivity : AppCompatActivity(), LighthouseListener {
 
@@ -52,7 +50,7 @@ class LighthouseListActivity : AppCompatActivity(), LighthouseListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.item_add -> {
-                val launcherIntent = Intent(this, LighthouseActivity::class.java)
+                val launcherIntent = Intent(this, LighthouseView::class.java)
                 refreshIntentLauncher.launch(launcherIntent)
             }
             R.id.item_map -> {
@@ -64,7 +62,7 @@ class LighthouseListActivity : AppCompatActivity(), LighthouseListener {
     }
 
     override fun onLighthouseClick(lighthouse: LighthouseModel) {
-        val launcherIntent = Intent(this, LighthouseActivity::class.java)
+        val launcherIntent = Intent(this, LighthouseView::class.java)
         launcherIntent.putExtra("lighthouse_edit", lighthouse)
         mapIntentLauncher.launch(launcherIntent)
     }
