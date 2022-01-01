@@ -1,4 +1,4 @@
-package org.wit.lighthouse.activities
+package org.wit.lighthouse.views.location
 import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -15,16 +15,18 @@ import org.wit.lighthouse.databinding.ActivityMapBinding
 import org.wit.lighthouse.models.Location
 
 
-class MapActivity : AppCompatActivity(), OnMapReadyCallback,
+class EditLocationView : AppCompatActivity(), OnMapReadyCallback,
     GoogleMap.OnMarkerDragListener,
     GoogleMap.OnMarkerClickListener{
 
     private lateinit var map: GoogleMap
+    lateinit var presenter: EditLocationPresenter
     var location = Location()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
+        presenter = EditLocationPresenter(this)
         location = intent.extras?.getParcelable<Location>("location")!!
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -33,16 +35,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-        val loc = LatLng(location.lat, location.lng)
-        val options = MarkerOptions()
-            .title("Your Lighthouse")
-            .snippet("GPS : $loc")
-            .draggable(true)
-            .position(loc)
-        map.addMarker(options)
-        map.setOnMarkerDragListener(this)
-        map.setOnMarkerClickListener(this)
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, location.zoom))
+        presenter.initMap(map)
     }
 
     override fun onMarkerDragStart(marker: Marker) {
@@ -52,21 +45,14 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
     }
 
     override fun onMarkerDragEnd(marker: Marker) {
-        location.lat = marker.position.latitude
-        location.lng = marker.position.longitude
-        location.zoom = map.cameraPosition.zoom
+        presenter.doUpdateLocation(marker.position.latitude,marker.position.longitude, map.cameraPosition.zoom)
     }
     override fun onBackPressed() {
-        val resultIntent = Intent()
-        resultIntent.putExtra("location", location)
-        setResult(Activity.RESULT_OK, resultIntent)
-        finish()
-        super.onBackPressed()
+        presenter.doOnBackPressed()
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
-        val loc = LatLng(location.lat, location.lng)
-        marker.snippet = "GPS : $loc"
+        presenter.doUpdateMarker(marker)
         return false
     }
 }

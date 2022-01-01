@@ -1,4 +1,4 @@
-package org.wit.lighthouse.activities
+package org.wit.lighthouse.views.map
 
 import android.os.Bundle
 import android.widget.TextView
@@ -8,19 +8,21 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import androidx.navigation.ui.AppBarConfiguration
+import com.squareup.picasso.Picasso
 import org.wit.lighthouse.R
 import org.wit.lighthouse.databinding.ActivityLighthouseMapsBinding
 import org.wit.lighthouse.databinding.ContentLighthouseMapsBinding
 import org.wit.lighthouse.main.MainApp
+import org.wit.lighthouse.models.LighthouseModel
 
-class LighthouseMapsActivity : AppCompatActivity(), GoogleMap.OnMarkerClickListener {
+class LighthouseMapsView : AppCompatActivity(), GoogleMap.OnMarkerClickListener {
 
 
     private lateinit var binding: ActivityLighthouseMapsBinding
     private lateinit var contentBinding: ContentLighthouseMapsBinding
-    lateinit var map: GoogleMap
+    //lateinit var map: GoogleMap
     lateinit var app: MainApp
+    lateinit var presenter: LighthouseMapsPresenter
 
 
 
@@ -32,31 +34,28 @@ class LighthouseMapsActivity : AppCompatActivity(), GoogleMap.OnMarkerClickListe
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
+        presenter = LighthouseMapsPresenter(this)
         contentBinding = ContentLighthouseMapsBinding.bind(binding.root)
+
         contentBinding.mapView.onCreate(savedInstanceState)
         contentBinding.mapView.getMapAsync {
-            map = it
-            configureMap()
+            presenter.doPopulateMap(it)
         }
 
     }
 
-    fun configureMap(){
-        map.setOnMarkerClickListener(this)
-        map.uiSettings.isZoomControlsEnabled = true
-        app.lighthouses.findAll().forEach {
-            val loc = LatLng(it.lat, it.lng)
-            val options = MarkerOptions().title(it.title).position(loc)
-            map.addMarker(options).tag = it.id
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, it.zoom))
-        }
+    fun showLighthouse(lighthouse: LighthouseModel) {
+        contentBinding.currentTitle.text = lighthouse.title
+        contentBinding.currentDescription.text = lighthouse.description
+        Picasso.get()
+            .load(lighthouse.image)
+            .into(contentBinding.imageView2)
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
-        val currentTitle: TextView = findViewById(R.id.currentTitle)
-        currentTitle.text = marker.title
+        presenter.doMarkerSelected(marker)
 
-        return false
+        return true
     }
 
     /*override fun onMarkerClick(marker: Marker): Boolean {
@@ -64,7 +63,7 @@ class LighthouseMapsActivity : AppCompatActivity(), GoogleMap.OnMarkerClickListe
         val lighthouse = app.lighthouses.findById(tag)
         currentTitle.text = lighthouse!!.title
         currentDescription.text = lighthouse!!.description
-        imageView.setImageBitmap(readImageFromPath(this@PlacemarkMapsActivity, placemark.image))
+        imageView.setImageBitmap(readImageFromPath(this@lighthouseMapsActivity, lighthouse.image))
         return true
     }*/
 

@@ -4,6 +4,7 @@
     package="org.wit.lighthouse">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".main.MainApp"
@@ -14,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Placemark">
         <activity
-            android:name=".activities.LighthouseMapsActivity"
+            android:name=".views.map.LighthouseMapsView"
             android:exported="false"
             android:label="@string/title_activity_lighthouse_maps"
             android:theme="@style/Theme.Placemark.NoActionBar" />
@@ -24,11 +25,11 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".activities.MapActivity"
+            android:name=".views.location.EditLocationView"
             android:exported="true"
             android:label="@string/title_activity_map" />
         <activity
-            android:name=".activities.LighthouseListActivity"
+            android:name=".views.lighthouselist.LighthouseListView"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,7 +37,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.LighthouseActivity" />
+        <activity android:name=".views.lighthouse.LighthouseView" />
     </application>
 
 </manifest>

@@ -1,156 +1,136 @@
 package org.wit.lighthouse.views.lighthouse
 
-import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import org.wit.lighthouse.R
-import org.wit.lighthouse.activities.MapActivity
 import org.wit.lighthouse.databinding.ActivityLighthouseBinding
-import org.wit.lighthouse.helpers.showImagePicker
-import org.wit.lighthouse.main.MainApp
 import org.wit.lighthouse.models.LighthouseModel
-import org.wit.lighthouse.models.Location
 import timber.log.Timber.i
 
-class LighthouseActivity : AppCompatActivity() {
-    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
-    private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
+class LighthouseView : AppCompatActivity() {
     private lateinit var binding: ActivityLighthouseBinding
-    //var location = Location(52.245696, -7.139102, 15f)
-
+    private lateinit var presenter: LighthousePresenter
+    lateinit var map: GoogleMap
     var lighthouse = LighthouseModel()
-
-    lateinit var app: MainApp
-
-
-    //val lighthouses = ArrayList<lighthouseModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-       var edit = false
 
         binding = ActivityLighthouseBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.toolbarAdd.title = title
         setSupportActionBar(binding.toolbarAdd)
 
-        app = application as MainApp
+        presenter = LighthousePresenter(this)
 
-        if (intent.hasExtra("lighthouse_edit")) {
-            edit = true
-            lighthouse = intent.extras?.getParcelable("lighthouse_edit")!!
-            binding.lighthouseTitle.setText(lighthouse.title)
-            binding.description.setText(lighthouse.description)
-            binding.btnAdd.setText(R.string.save_lighthouse)
-            Picasso.get()
-                .load(lighthouse.image)
-                .into(binding.lighthouseImage)
-            if (lighthouse.image != Uri.EMPTY) {
-                binding.chooseImage.setText(R.string.change_lighthouse_image)
-            }
-        }
-
-        binding.btnAdd.setOnClickListener() {
-            lighthouse.title = binding.lighthouseTitle.text.toString()
-            lighthouse.description = binding.description.text.toString()
-            if (lighthouse.title.isEmpty()) {
-                Snackbar.make(it,R.string.enter_lighthouse_title, Snackbar.LENGTH_LONG)
-                    .show()
-            } else {
-                if (edit) {
-                    app.lighthouses.update(lighthouse.copy())
-                } else {
-                    app.lighthouses.create(lighthouse.copy())
-                }
-            }
-            i("add Button Pressed: $lighthouse")
-            setResult(RESULT_OK)
-            finish()
+        binding.mapView.onCreate(savedInstanceState);
+        binding.mapView.getMapAsync {
+            map = it
+            presenter.doConfigureMap(map)
         }
 
         binding.chooseImage.setOnClickListener {
-            showImagePicker(imageIntentLauncher)
+            presenter.cacheLighthouse(binding.lighthouseTitle.text.toString(), binding.description.text.toString())
+            presenter.doSelectImage()
         }
 
-
-        binding.lighthouseLocation.setOnClickListener {
-            val location = Location(52.1237, -6.9294, 15f)
-            if (lighthouse.zoom != 0f) {
-                location.lat =  lighthouse.lat
-                location.lng = lighthouse.lng
-                location.zoom = lighthouse.zoom
-            }
-            val launcherIntent = Intent(this, MapActivity::class.java)
-                .putExtra("location", location)
-            mapIntentLauncher.launch(launcherIntent)
+        /*binding.lighthouseLocation.setOnClickListener {
+            presenter.cacheLighthouse(binding.lighthouseTitle.text.toString(), binding.description.text.toString())
+            presenter.doSetLocation()
+        }*/
+        binding.mapView.getMapAsync {
+            map = it
+            presenter.doConfigureMap(map)
+            it.setOnMapClickListener { presenter.doSetLocation() }
         }
-        registerMapCallback()
-        registerImagePickerCallback()
+
     }
+    fun showLighthouse(lighthouse: LighthouseModel) {
+        binding.lighthouseTitle.setText(lighthouse.title)
+        binding.description.setText(lighthouse.description)
 
+        Picasso.get()
+            .load(lighthouse.image)
+            .into(binding.lighthouseImage)
+
+        if (lighthouse.image != Uri.EMPTY) {
+            binding.chooseImage.setText(R.string.change_lighthouse_image)
+        }
+        binding.lat.setText("%.6f".format(lighthouse.lat))
+        binding.lng.setText("%.6f".format(lighthouse.lng))
+
+    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_lighthouse, menu)
-        //if (edit && menu != null) menu.getItem(0).setVisible(true)
+        val deleteMenu: MenuItem = menu.findItem(R.id.item_delete)
+        if (presenter.edit){
+            deleteMenu.setVisible(true)
+        }
+        else{
+            deleteMenu.setVisible(false)
+        }
         return super.onCreateOptionsMenu(menu)
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.item_save -> {
+                if (binding.lighthouseTitle.text.toString().isEmpty()) {
+                    Snackbar.make(binding.root, R.string.enter_lighthouse_title, Snackbar.LENGTH_LONG)
+                        .show()
+                } else {
+                    presenter.doAddOrSave(binding.lighthouseTitle.text.toString(), binding.description.text.toString())
+                }
+            }
             R.id.item_delete -> {
-                app.lighthouses.delete(lighthouse)
-                finish()
+                presenter.doDelete()
             }
             R.id.item_cancel -> {
-                finish() }
+                presenter.doCancel()
+            }
+
         }
         return super.onOptionsItemSelected(item)
     }
-    private fun registerImagePickerCallback() {
-        imageIntentLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-            { result ->
-                when(result.resultCode){
-                    RESULT_OK -> {
-                        if (result.data != null) {
-                            i("Got Result ${result.data!!.data}")
-                            lighthouse.image = result.data!!.data!!
-                            Picasso.get()
-                                .load(lighthouse.image)
-                                .into(binding.lighthouseImage)
-                            binding.chooseImage.setText(R.string.change_lighthouse_image)
-                        } // end of if
-                    }
-                    RESULT_CANCELED -> { } else -> { }
-                }
-            }
+
+    fun updateImage(image: Uri){
+        i("Image updated")
+        Picasso.get()
+            .load(image)
+            .into(binding.lighthouseImage)
+        binding.chooseImage.setText(R.string.change_lighthouse_image)
     }
-    private fun registerMapCallback() {
-        mapIntentLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-            { result ->
-                when (result.resultCode) {
-                    RESULT_OK -> {
-                        if (result.data != null) {
-                            i("Got Location ${result.data.toString()}")
-                            val location = result.data!!.extras?.getParcelable<Location>("location")!!
-                            i("Location == $location")
-                            lighthouse.lat = location.lat
-                            lighthouse.lng = location.lng
-                            lighthouse.zoom = location.zoom
-                        } // end of if
-                    }
-                    RESULT_CANCELED -> { } else -> { }
-                }
-            }
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.mapView.onDestroy()
     }
 
+    override fun onLowMemory() {
+        super.onLowMemory()
+        binding.mapView.onLowMemory()
     }
+
+    override fun onPause() {
+        super.onPause()
+        binding.mapView.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.mapView.onResume()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        binding.mapView.onSaveInstanceState(outState)
+    }
+}
 
