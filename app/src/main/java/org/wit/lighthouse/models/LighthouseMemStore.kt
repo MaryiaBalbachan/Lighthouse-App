@@ -14,6 +14,11 @@ class LighthouseMemStore : LighthouseStore {
         return lighthouses
     }
 
+    override fun findById(id:Long) : LighthouseModel? {
+        val foundLighthouse: LighthouseModel? = lighthouses.find { it.id == id }
+        return foundLighthouse
+    }
+
     override fun create(lighthouse: LighthouseModel) {
         lighthouse.id = getId()
         lighthouses.add(lighthouse)
