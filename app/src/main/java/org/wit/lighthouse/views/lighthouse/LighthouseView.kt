@@ -34,6 +34,7 @@ class LighthouseView : AppCompatActivity() {
         binding.mapView.getMapAsync {
             map = it
             presenter.doConfigureMap(map)
+            it.setOnMapClickListener { presenter.doSetLocation() }
         }
 
         binding.chooseImage.setOnClickListener {
@@ -126,6 +127,9 @@ class LighthouseView : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         binding.mapView.onResume()
+        presenter.doRestartLocationUpdates()
+
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -7,6 +7,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -14,6 +16,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import org.wit.lighthouse.databinding.ActivityLighthouseBinding
 import org.wit.lighthouse.helpers.checkLocationPermissions
+import org.wit.lighthouse.helpers.createDefaultLocationRequest
 import org.wit.lighthouse.main.MainApp
 import org.wit.lighthouse.models.Location
 import org.wit.lighthouse.models.LighthouseModel
@@ -34,6 +37,7 @@ class LighthousePresenter(private val view: LighthouseView)  {
     var edit = false;
     private val location = Location(52.1237, -6.9294, 15f)
     var locationService: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view)
+    val locationRequest = createDefaultLocationRequest()
 
 
 
@@ -58,6 +62,20 @@ class LighthousePresenter(private val view: LighthouseView)  {
         }
     }
 
+    @SuppressLint("MissingPermission")
+    fun doRestartLocationUpdates() {
+        var locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                if (locationResult != null && locationResult.locations != null) {
+                    val l = locationResult.locations.last()
+                    locationUpdate(l.latitude, l.longitude)
+                }
+            }
+        }
+        if (!edit) {
+            locationService.requestLocationUpdates(locationRequest, locationCallback, null)
+        }
+    }
 
     @SuppressLint("MissingPermission")
     fun doSetCurrentLocation() {
