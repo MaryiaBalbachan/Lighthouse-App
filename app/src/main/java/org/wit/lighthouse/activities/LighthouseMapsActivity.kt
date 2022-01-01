@@ -1,6 +1,7 @@
 package org.wit.lighthouse.activities
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -8,11 +9,12 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import androidx.navigation.ui.AppBarConfiguration
+import org.wit.lighthouse.R
 import org.wit.lighthouse.databinding.ActivityLighthouseMapsBinding
 import org.wit.lighthouse.databinding.ContentLighthouseMapsBinding
 import org.wit.lighthouse.main.MainApp
 
-class LighthouseMapsActivity : AppCompatActivity() {
+class LighthouseMapsActivity : AppCompatActivity(), GoogleMap.OnMarkerClickListener {
 
 
     private lateinit var binding: ActivityLighthouseMapsBinding
@@ -40,6 +42,7 @@ class LighthouseMapsActivity : AppCompatActivity() {
     }
 
     fun configureMap(){
+        map.setOnMarkerClickListener(this)
         map.uiSettings.isZoomControlsEnabled = true
         app.lighthouses.findAll().forEach {
             val loc = LatLng(it.lat, it.lng)
@@ -48,6 +51,14 @@ class LighthouseMapsActivity : AppCompatActivity() {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, it.zoom))
         }
     }
+
+    override fun onMarkerClick(marker: Marker): Boolean {
+        val currentTitle: TextView = findViewById(R.id.currentTitle)
+        currentTitle.text = marker.title
+
+        return false
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         contentBinding.mapView.onDestroy()
