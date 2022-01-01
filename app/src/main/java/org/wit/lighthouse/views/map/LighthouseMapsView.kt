@@ -53,13 +53,20 @@ class LighthouseMapsActivity : AppCompatActivity(), GoogleMap.OnMarkerClickListe
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
+        val currentTitle: TextView = findViewById(R.id.currentTitle)
+        currentTitle.text = marker.title
+
+        return false
+    }
+
+    /*override fun onMarkerClick(marker: Marker): Boolean {
         val tag = marker.tag as Long
         val lighthouse = app.lighthouses.findById(tag)
         currentTitle.text = lighthouse!!.title
         currentDescription.text = lighthouse!!.description
-        imageView.setImageBitmap(readImageFromPath(this@LighthouseMapsActivity, lighthouse.image))
+        imageView.setImageBitmap(readImageFromPath(this@PlacemarkMapsActivity, placemark.image))
         return true
-    }
+    }*/
 
     override fun onDestroy() {
         super.onDestroy()
