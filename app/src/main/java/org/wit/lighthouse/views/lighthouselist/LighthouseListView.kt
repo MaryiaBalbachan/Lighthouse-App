@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.wit.lighthouse.R
 import org.wit.lighthouse.adapters.LighthouseAdapter
 import org.wit.lighthouse.adapters.LighthouseListener
@@ -24,13 +27,13 @@ class LighthouseListView : AppCompatActivity(), LighthouseListener {
         setContentView(binding.root)
         binding.toolbar.title = title
         setSupportActionBar(binding.toolbar)
+
         presenter = LighthouseListPresenter(this)
-        app = application as MainApp
+        //app = application as MainApp
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
-        binding.recyclerView.adapter =
-            LighthouseAdapter(presenter.getLighthouses(), this)
+        updateRecyclerView()
         //loadLighthouses()
 
     }
@@ -41,6 +44,7 @@ class LighthouseListView : AppCompatActivity(), LighthouseListener {
     }
     override fun onResume() {
         //update the view
+        updateRecyclerView()
         binding.recyclerView.adapter?.notifyDataSetChanged()
         Timber.i("recyclerView onResume")
         super.onResume()
@@ -57,9 +61,12 @@ class LighthouseListView : AppCompatActivity(), LighthouseListener {
         presenter.doEditLighthouse(lighthouse)
 
     }
-
-    private fun loadLighthouses() {
-        binding.recyclerView.adapter = LighthouseAdapter(presenter.getLighthouses(), this)
-        binding.recyclerView.adapter?.notifyDataSetChanged()
+    private fun updateRecyclerView(){
+        GlobalScope.launch(Dispatchers.Main){
+            binding.recyclerView.adapter =
+                LighthouseAdapter(presenter.getLighthouses(), this@LighthouseListView)
+        }
     }
+
+
 }

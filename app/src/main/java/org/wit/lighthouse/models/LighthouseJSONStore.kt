@@ -29,24 +29,24 @@ class LighthouseJSONStore(private val context: Context) : LighthouseStore {
         }
     }
 
-    override fun findAll(): MutableList<LighthouseModel> {
+    override suspend fun findAll(): MutableList<LighthouseModel> {
         logAll()
         return lighthouses
     }
 
-    override fun findById(id: Long): LighthouseModel? {
+    override suspend fun findById(id: Long): LighthouseModel? {
        val foundLighthouse: LighthouseModel? = lighthouses.find { it.id == id}
         return foundLighthouse
     }
 
-    override fun create(lighthouse: LighthouseModel) {
+    override suspend fun create(lighthouse: LighthouseModel) {
         lighthouse.id = generateRandomId()
         lighthouses.add(lighthouse)
         serialize()
     }
 
 
-    override fun update(lighthouse: LighthouseModel) {
+    override suspend fun update(lighthouse: LighthouseModel) {
         val lighthousesList = findAll() as ArrayList<LighthouseModel>
         var foundlighthouse: LighthouseModel? = lighthousesList.find { p -> p.id == lighthouse.id }
         if (foundlighthouse != null) {
@@ -63,7 +63,7 @@ class LighthouseJSONStore(private val context: Context) : LighthouseStore {
         lighthouses.remove(lighthouse)
         serialize()
     }*/
-    override fun delete(lighthouse: LighthouseModel) {
+    override suspend fun delete(lighthouse: LighthouseModel) {
         val foundLighthouse: LighthouseModel? = lighthouses.find { it.id == lighthouse.id }
         lighthouses.remove(foundLighthouse)
         serialize() }

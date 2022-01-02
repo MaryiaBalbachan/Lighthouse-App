@@ -3,6 +3,9 @@ package org.wit.lighthouse.views.lighthouselist
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.wit.lighthouse.views.map.LighthouseMapsView
 import org.wit.lighthouse.main.MainApp
 import org.wit.lighthouse.models.LighthouseModel
@@ -20,7 +23,7 @@ class LighthouseListPresenter(val view: LighthouseListView) {
         registerRefreshCallback()
     }
 
-    fun getLighthouses() = app.lighthouses.findAll()
+    suspend fun getLighthouses() = app.lighthouses.findAll()
 
     fun doAddLighthouse() {
         val launcherIntent = Intent(view, LighthouseView::class.java)
@@ -43,7 +46,11 @@ class LighthouseListPresenter(val view: LighthouseListView) {
     private fun registerRefreshCallback() {
         refreshIntentLauncher =
             view.registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-            { getLighthouses() }
+            {
+                GlobalScope.launch(Dispatchers.Main){
+                    getLighthouses()
+                }
+            }
     }
     private fun registerMapCallback() {
         mapIntentLauncher =

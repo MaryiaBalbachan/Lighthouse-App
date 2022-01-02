@@ -10,21 +10,21 @@ class LighthouseMemStore : LighthouseStore {
 
     val lighthouses = ArrayList<LighthouseModel>()
 
-    override fun findAll(): List<LighthouseModel> {
+    override suspend fun findAll(): List<LighthouseModel> {
         return lighthouses
     }
 
-    override fun findById(id:Long) : LighthouseModel? {
+    override suspend fun findById(id:Long) : LighthouseModel? {
         val foundLighthouse: LighthouseModel? = lighthouses.find { it.id == id }
         return foundLighthouse
     }
 
-    override fun create(lighthouse: LighthouseModel) {
+    override suspend fun create(lighthouse: LighthouseModel) {
         lighthouse.id = getId()
         lighthouses.add(lighthouse)
         logAll()
     }
-    override fun update(lighthouse: LighthouseModel) {
+    override suspend fun update(lighthouse: LighthouseModel) {
         var foundlighthouse: LighthouseModel? = lighthouses.find { p -> p.id == lighthouse.id }
         if (foundlighthouse != null) {
             foundlighthouse.title = lighthouse.title
@@ -37,7 +37,7 @@ class LighthouseMemStore : LighthouseStore {
         }
     }
 
-    override fun delete(lighthouse: LighthouseModel){
+    override suspend fun delete(lighthouse: LighthouseModel){
         lighthouses.remove(lighthouse)
     }
 

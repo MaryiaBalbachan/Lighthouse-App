@@ -103,7 +103,7 @@ class LighthousePresenter(private val view: LighthouseView)  {
         view?.showLighthouse(lighthouse)
     }
 
-    fun doAddOrSave(title: String, description: String) {
+    suspend fun doAddOrSave(title: String, description: String) {
         lighthouse.title = title
         lighthouse.description = description
         if (edit) {
@@ -121,7 +121,7 @@ class LighthousePresenter(private val view: LighthouseView)  {
 
     }
 
-    fun doDelete() {
+    suspend fun doDelete() {
         app.lighthouses.delete(lighthouse)
         view.finish()
 

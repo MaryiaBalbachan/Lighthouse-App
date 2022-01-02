@@ -8,6 +8,9 @@ import android.view.MenuItem
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.wit.lighthouse.R
 import org.wit.lighthouse.databinding.ActivityLighthouseBinding
 import org.wit.lighthouse.models.LighthouseModel
@@ -30,22 +33,17 @@ class LighthouseView : AppCompatActivity() {
 
         presenter = LighthousePresenter(this)
 
-        binding.mapView.onCreate(savedInstanceState);
-        binding.mapView.getMapAsync {
-            map = it
-            presenter.doConfigureMap(map)
-            it.setOnMapClickListener { presenter.doSetLocation() }
-        }
-
         binding.chooseImage.setOnClickListener {
             presenter.cacheLighthouse(binding.lighthouseTitle.text.toString(), binding.description.text.toString())
             presenter.doSelectImage()
         }
 
-        /*binding.lighthouseLocation.setOnClickListener {
+        binding.mapView.setOnClickListener {
             presenter.cacheLighthouse(binding.lighthouseTitle.text.toString(), binding.description.text.toString())
             presenter.doSetLocation()
-        }*/
+        }
+
+        binding.mapView.onCreate(savedInstanceState);
         binding.mapView.getMapAsync {
             map = it
             presenter.doConfigureMap(map)
@@ -88,11 +86,18 @@ class LighthouseView : AppCompatActivity() {
                     Snackbar.make(binding.root, R.string.enter_lighthouse_title, Snackbar.LENGTH_LONG)
                         .show()
                 } else {
-                    presenter.doAddOrSave(binding.lighthouseTitle.text.toString(), binding.description.text.toString())
+                    GlobalScope.launch(Dispatchers.IO) {
+                        presenter.doAddOrSave(
+                            binding.lighthouseTitle.text.toString(),
+                            binding.description.text.toString()
+                        )
+                    }
                 }
             }
-            R.id.item_delete -> {
-                presenter.doDelete()
+            R.id.item_delete ->  {
+                GlobalScope.launch(Dispatchers.IO){
+                    presenter.doDelete()
+                }
             }
             R.id.item_cancel -> {
                 presenter.doCancel()
@@ -136,5 +141,8 @@ class LighthouseView : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         binding.mapView.onSaveInstanceState(outState)
     }
+
+
+
 }
 

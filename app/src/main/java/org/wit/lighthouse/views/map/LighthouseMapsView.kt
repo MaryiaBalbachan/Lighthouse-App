@@ -9,6 +9,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.wit.lighthouse.R
 import org.wit.lighthouse.databinding.ActivityLighthouseMapsBinding
 import org.wit.lighthouse.databinding.ContentLighthouseMapsBinding
@@ -39,11 +42,11 @@ class LighthouseMapsView : AppCompatActivity(), GoogleMap.OnMarkerClickListener 
 
         contentBinding.mapView.onCreate(savedInstanceState)
         contentBinding.mapView.getMapAsync {
-            presenter.doPopulateMap(it)
+            GlobalScope.launch(Dispatchers.Main) {
+                presenter.doPopulateMap(it)
+            }
         }
-
     }
-
     fun showLighthouse(lighthouse: LighthouseModel) {
         contentBinding.currentTitle.text = lighthouse.title
         contentBinding.currentDescription.text = lighthouse.description
@@ -53,7 +56,9 @@ class LighthouseMapsView : AppCompatActivity(), GoogleMap.OnMarkerClickListener 
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
-        presenter.doMarkerSelected(marker)
+        GlobalScope.launch(Dispatchers.Main) {
+            presenter.doMarkerSelected(marker)
+        }
 
         return true
     }
