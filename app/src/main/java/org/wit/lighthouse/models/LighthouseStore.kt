@@ -6,4 +6,5 @@ interface LighthouseStore {
     suspend fun update(lighthouse: LighthouseModel)
     suspend fun delete(lighthouse: LighthouseModel)
     suspend fun findById(id:Long) : LighthouseModel?
+    suspend fun clear()
 }

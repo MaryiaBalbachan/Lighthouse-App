@@ -44,4 +44,7 @@ class LighthouseMemStore : LighthouseStore {
     fun logAll() {
         lighthouses.forEach{ i("${it}") }
     }
+    override suspend fun clear(){
+        lighthouses.clear()
+    }
 }
