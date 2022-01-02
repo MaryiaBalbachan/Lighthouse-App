@@ -44,7 +44,9 @@ class LighthouseJSONStore(private val context: Context) : LighthouseStore {
         lighthouses.add(lighthouse)
         serialize()
     }
-
+    override suspend fun clear(){
+        lighthouses.clear()
+    }
 
     override suspend fun update(lighthouse: LighthouseModel) {
         val lighthousesList = findAll() as ArrayList<LighthouseModel>
@@ -53,9 +55,8 @@ class LighthouseJSONStore(private val context: Context) : LighthouseStore {
             foundlighthouse.title = lighthouse.title
             foundlighthouse.description = lighthouse.description
             foundlighthouse.image = lighthouse.image
-            foundlighthouse.lat = lighthouse.lat
-            foundlighthouse.lng = lighthouse.lng
-            foundlighthouse.zoom = lighthouse.zoom
+            foundlighthouse.location = lighthouse.location
+
         }
         serialize()
     }

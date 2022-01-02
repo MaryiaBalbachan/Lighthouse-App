@@ -36,6 +36,6 @@ class LighthouseStoreRoom(val context: Context) : LighthouseStore {
         dao.deleteLighthouse(lighthouse)
     }
 
-    fun clear() {
+    override suspend fun clear() {
     }
 }
