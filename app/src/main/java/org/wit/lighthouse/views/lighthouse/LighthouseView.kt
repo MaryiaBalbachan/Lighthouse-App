@@ -54,8 +54,8 @@ class LighthouseView : AppCompatActivity() {
 
     }
     fun showLighthouse(lighthouse: LighthouseModel) {
-        binding.lighthouseTitle.setText(lighthouse.title)
-        binding.description.setText(lighthouse.description)
+        if (binding.lighthouseTitle.text.isEmpty()) binding.lighthouseTitle.setText(lighthouse.title)
+        if (binding.description.text.isEmpty())  binding.description.setText(lighthouse.description)
 
         Picasso.get()
             .load(lighthouse.image)
