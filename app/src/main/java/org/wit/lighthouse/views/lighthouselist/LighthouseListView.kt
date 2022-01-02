@@ -49,11 +49,12 @@ class LighthouseListView : AppCompatActivity(), LighthouseListener {
         return super.onCreateOptionsMenu(menu)
     }
     override fun onResume() {
+        super.onResume()
         //update the view
         updateRecyclerView()
         binding.recyclerView.adapter?.notifyDataSetChanged()
         Timber.i("recyclerView onResume")
-        super.onResume()
+
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

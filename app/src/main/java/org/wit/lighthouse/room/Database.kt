@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 import org.wit.lighthouse.helpers.Converters
 import org.wit.lighthouse.models.LighthouseModel
 
-@Database(entities = arrayOf(LighthouseModel::class), version = 1,  exportSchema = false)
+@Database(entities = arrayOf(LighthouseModel::class), version = 2,  exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class Database : RoomDatabase() {
 

@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import org.wit.lighthouse.R
 import org.wit.lighthouse.databinding.ActivityLighthouseBinding
 import org.wit.lighthouse.models.LighthouseModel
+import org.wit.lighthouse.models.Location
 import timber.log.Timber.i
 
 class LighthouseView : AppCompatActivity() {
@@ -62,11 +63,14 @@ class LighthouseView : AppCompatActivity() {
         if (lighthouse.image != Uri.EMPTY) {
             binding.chooseImage.setText(R.string.change_lighthouse_image)
         }
-        binding.lat.setText("%.6f".format(lighthouse.lat))
-        binding.lng.setText("%.6f".format(lighthouse.lng))
-
+        //binding.lat.setText("%.6f".format(lighthouse.lat))
+        //binding.lng.setText("%.6f".format(lighthouse.lng))
+        this.showLocation(lighthouse.location)
     }
-
+    private fun showLocation (loc: Location){
+        binding.lat.setText("%.6f".format(loc.lat))
+        binding.lng.setText("%.6f".format(loc.lng))
+    }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_lighthouse, menu)
         val deleteMenu: MenuItem = menu.findItem(R.id.item_delete)

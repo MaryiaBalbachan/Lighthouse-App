@@ -25,20 +25,20 @@ import org.wit.lighthouse.views.location.EditLocationView
 import timber.log.Timber
 import timber.log.Timber.i
 
-class LighthousePresenter(private val view: LighthouseView)  {
+class LighthousePresenter(private val view: LighthouseView) {
 
     var map: GoogleMap? = null
     var lighthouse = LighthouseModel()
     var app: MainApp = view.application as MainApp
     var binding: ActivityLighthouseBinding = ActivityLighthouseBinding.inflate(view.layoutInflater)
-    private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
-    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
+    private lateinit var imageIntentLauncher: ActivityResultLauncher<Intent>
+    private lateinit var mapIntentLauncher: ActivityResultLauncher<Intent>
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     var edit = false;
     private val location = Location(52.1237, -6.9294, 15f)
-    var locationService: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view)
+    var locationService: FusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(view)
     val locationRequest = createDefaultLocationRequest()
-
 
 
     init {
@@ -51,14 +51,13 @@ class LighthousePresenter(private val view: LighthouseView)  {
             edit = true
             lighthouse = view.intent.extras?.getParcelable("lighthouse_edit")!!
             view.showLighthouse(lighthouse)
-        }
-        else {
+        } else {
             if (checkLocationPermissions(view)) {
                 doSetCurrentLocation()
             }
 
-            lighthouse.lat = location.lat
-            lighthouse.lng = location.lng
+            lighthouse.location.lat = location.lat
+            lighthouse.location.lng = location.lng
         }
     }
 
@@ -88,20 +87,19 @@ class LighthousePresenter(private val view: LighthouseView)  {
 
     fun doConfigureMap(m: GoogleMap) {
         map = m
-        locationUpdate(lighthouse.lat, lighthouse.lng)
+        locationUpdate(lighthouse.location.lat, lighthouse.location.lng)
     }
 
     fun locationUpdate(lat: Double, lng: Double) {
-        lighthouse.lat = lat
-        lighthouse.lng = lng
-        lighthouse.zoom = 15f
+        lighthouse.location = location
         map?.clear()
         map?.uiSettings?.setZoomControlsEnabled(true)
-        val options = MarkerOptions().title(lighthouse.title).position(LatLng(lighthouse.lat, lighthouse.lng))
+        val options = MarkerOptions().title(lighthouse.title).position(LatLng(lighthouse.location.lat, lighthouse.location.lng))
         map?.addMarker(options)
-        map?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lighthouse.lat, lighthouse.lng), lighthouse.zoom))
-        view?.showLighthouse(lighthouse)
+        map?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lighthouse.location.lat, lighthouse.location.lng), lighthouse.location.zoom))
+        view.showLighthouse(lighthouse)
     }
+    
 
     suspend fun doAddOrSave(title: String, description: String) {
         lighthouse.title = title
@@ -132,13 +130,14 @@ class LighthousePresenter(private val view: LighthouseView)  {
     }
 
     fun doSetLocation() {
-        val location = Location(52.1237, -6.9294, 15f)
-        if (lighthouse.zoom != 0f) {
-            location.lat =  lighthouse.lat
-            location.lng = lighthouse.lng
-            location.zoom = lighthouse.zoom
-            locationUpdate(lighthouse.lat, lighthouse.lng)
+        if (lighthouse.location.zoom != 0f) {
+
+            location.lat =  lighthouse.location.lat
+            location.lng = lighthouse.location.lng
+            location.zoom = lighthouse.location.zoom
+            locationUpdate(lighthouse.location.lat, lighthouse.location.lng)
         }
+
         val launcherIntent = Intent(view, EditLocationView::class.java)
             .putExtra("location", location)
         mapIntentLauncher.launch(launcherIntent)
@@ -179,9 +178,8 @@ class LighthousePresenter(private val view: LighthouseView)  {
                             val location =
                                 result.data!!.extras?.getParcelable<Location>("location")!!
                             Timber.i("Location == $location")
-                            lighthouse.lat = location.lat
-                            lighthouse.lng = location.lng
-                            lighthouse.zoom = location.zoom
+                            lighthouse.location = location
+
                         } // end of if
                     }
                     AppCompatActivity.RESULT_CANCELED -> {
