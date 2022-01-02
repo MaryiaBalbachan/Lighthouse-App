@@ -53,6 +53,7 @@ class LighthouseListView : AppCompatActivity(), LighthouseListener {
         when (item.itemId) {
             R.id.item_add -> { presenter.doAddLighthouse() }
             R.id.item_map -> { presenter.doShowLighthousesMap() }
+            R.id.item_logout -> { presenter.doLogout() }
         }
         return super.onOptionsItemSelected(item)
     }

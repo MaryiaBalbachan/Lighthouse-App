@@ -10,6 +10,7 @@ import org.wit.lighthouse.views.map.LighthouseMapsView
 import org.wit.lighthouse.main.MainApp
 import org.wit.lighthouse.models.LighthouseModel
 import org.wit.lighthouse.views.lighthouse.LighthouseView
+import org.wit.lighthouse.views.login.LoginView
 
 class LighthouseListPresenter(val view: LighthouseListView) {
     var app: MainApp = view.application as MainApp
@@ -41,6 +42,10 @@ class LighthouseListPresenter(val view: LighthouseListView) {
     fun doShowLighthousesMap() {
         val launcherIntent = Intent(view, LighthouseMapsView::class.java)
         //refreshIntentLauncher.launch(launcherIntent)
+        editIntentLauncher.launch(launcherIntent)
+    }
+    fun doLogout(){
+        val launcherIntent = Intent(view, LoginView::class.java)
         editIntentLauncher.launch(launcherIntent)
     }
     private fun registerRefreshCallback() {
