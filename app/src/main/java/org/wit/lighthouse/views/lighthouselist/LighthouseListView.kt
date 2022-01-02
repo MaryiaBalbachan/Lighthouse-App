@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -25,7 +26,12 @@ class LighthouseListView : AppCompatActivity(), LighthouseListener {
         super.onCreate(savedInstanceState)
         binding = ActivityLighthouseListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         binding.toolbar.title = title
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            binding.toolbar.title = "${title}: ${user.email}"
+        }
         setSupportActionBar(binding.toolbar)
 
         presenter = LighthouseListPresenter(this)
@@ -53,7 +59,11 @@ class LighthouseListView : AppCompatActivity(), LighthouseListener {
         when (item.itemId) {
             R.id.item_add -> { presenter.doAddLighthouse() }
             R.id.item_map -> { presenter.doShowLighthousesMap() }
-            R.id.item_logout -> { presenter.doLogout() }
+            R.id.item_logout -> {
+                GlobalScope.launch(Dispatchers.IO) {
+                    presenter.doLogout()
+                }
+            }
         }
         return super.onOptionsItemSelected(item)
     }
