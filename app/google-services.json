@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "153321594694",
+    "project_id": "lighhouse-demo",
+    "storage_bucket": "lighhouse-demo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:153321594694:android:e2fc4cdbd3295839488f47",
+        "android_client_info": {
+          "package_name": "org.wit.placemark"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "153321594694-2fcvjn0use687n009laqo4c5n8c4hgcn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIn_UsCmeyKyC9R_vsi2DkTo7Czp7KVYY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "153321594694-2fcvjn0use687n009laqo4c5n8c4hgcn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
